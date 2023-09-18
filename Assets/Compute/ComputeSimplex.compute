@@ -1,0 +1,163 @@
+#pragma kernel CSMain
+
+#include "LookupTables.hlsl"
+
+RWStructuredBuffer<float> noiseBuffer;
+uint width;
+uint height;
+uint depth;
+int octave;
+float persistence;
+float lacunarity;
+int3 chunkPosition;
+
+float3 rotate(float3 g, int hash)
+{
+	// Todo: different angles to the 3 axis
+    float a = 5.0f; // 72 * 5  = 360
+    float b = 10.0f; // 36 * 10 = 360
+    float ga = 20.0f; // 18 * 20 = 360
+    int hashA = hash & 72;
+    int hashB = hash & 72;
+    int hashG = hash & 72;
+    float alpha = a * hashA;
+    float beta = b * hashB;
+    float gamma = ga * hashG;
+
+    float x = g.x * cos(beta) * sin(gamma) + g.y * (sin(alpha) * sin(beta) * cos(gamma) - cos(alpha) * sin(gamma)) +
+		+g.z * (cos(alpha) * sin(beta) * cos(gamma) + sin(alpha) * sin(gamma));
+
+    float y = g.x * cos(beta) * sin(gamma) + g.y * (sin(alpha) * sin(beta) * sin(gamma) - cos(alpha) * cos(gamma)) +
+		+g.z * (cos(alpha) * sin(beta) * sin(gamma) + sin(alpha) * cos(gamma));
+
+    float z = -g.x * sin(beta) + g.y * sin(alpha) * cos(beta) + g.z * cos(alpha) * cos(beta);
+
+    return float3(x, y, z);
+}
+
+float dot(float3 p, float3 q)
+{
+    return p.x * q.x + p.y * q.y + p.z * q.z;
+}
+
+float grad(int hash, float3 vertex)
+{
+    int gradIndex = hash & 11;
+    float3 g = rotate(gradient[gradIndex], hash);
+    return dot(g, vertex);
+}
+
+float3 skew(float3 vertex)
+{
+    float F = 1.0f / 3.0f;
+    float s = (vertex.x + vertex.y + vertex.z) * F;
+    return float3(vertex.x + s, vertex.y + s, vertex.z + s);
+}
+
+float3 unskew(float3 vertex)
+{
+    float G = 0.5f / 3.0f;
+    float s = (vertex.x + vertex.y + vertex.z) * G;
+    return float3(vertex.x - s, vertex.y - s, vertex.z - s);
+}
+
+float simplex(float x, float y, float z)
+{
+    float3 skewed = skew(float3(x, y, z));
+    int3 sk_floor = { (int) floor(skewed.x) & 255, (int) floor(skewed.y) & 255, (int) floor(skewed.z) & 255 };
+
+    float3 unskewed = unskew(sk_floor);
+    float3 delta = float3(x, y, z) - unskewed;
+
+    int3 traversal[4];
+    traversal[0] = int3(0, 0, 0);
+    traversal[3] = int3(1, 1, 1);
+
+    if (delta.x > delta.y && delta.y > delta.z)
+    {
+        traversal[1] = int3(1, 0, 0);
+        traversal[2] = int3(1, 1, 0);
+    }
+    else if (delta.x > delta.z && delta.z > delta.y)
+    {
+        traversal[1] = int3(1, 0, 0);
+        traversal[2] = int3(1, 0, 1);
+    }
+    else if (delta.y > delta.x && delta.x > delta.z)
+    {
+        traversal[1] = int3(0, 1, 0);
+        traversal[2] = int3(1, 1, 0);
+    }
+    else if (delta.y > delta.z && delta.z > delta.x)
+    {
+        traversal[1] = int3(0, 1, 0);
+        traversal[2] = int3(0, 1, 1);
+    }
+    else if (delta.z > delta.x && delta.x > delta.y)
+    {
+        traversal[1] = int3(0, 0, 1);
+        traversal[2] = int3(1, 0, 1);
+    }
+    else if (delta.z > delta.y && delta.y > delta.x)
+    {
+        traversal[1] = int3(0, 0, 1);
+        traversal[2] = int3(0, 1, 1);
+    }
+
+    float3 simplex[4];
+    for (int i = 0; i < 4; i++)
+        simplex[i] = delta - unskew(traversal[i]);
+
+    int indicies[4];
+    for (int j = 0; j < 4; j++)
+        indicies[j] = perm[sk_floor.x + traversal[j].x + perm[sk_floor.y + traversal[j].y + perm[sk_floor.z + traversal[j].z]]];
+
+    float noise = 0.0f;
+    for (int k = 0; k < 4; k++)
+    {
+        float t = 0.6f - simplex[k].x * simplex[k].x - simplex[k].y * simplex[k].y - simplex[k].z * simplex[k].z;
+        noise += t < 0.0f ? 0.0f : t * t * t * t * grad(indicies[k], simplex[k]);
+    }
+
+    return noise * 70.0f;
+}
+
+float noise(float x, float y, float z)
+{
+    float noiseValue = 0.0f;
+    float maxValue = 0.0f;
+    float amplitude = 1.0f;
+    float frequency = 1.0f;
+    for (int i = 0; i < octave; i++)
+    {
+        float dx = x / width * frequency; // + sampleBuffer[i * 3];
+        float dy = (y + 0.001f) / width * frequency; // + sampleBuffer[i * 3 + 1];
+        float dz = (z + 0.0001f) / width * frequency; // + sampleBuffer[i * 3 + 2];
+
+        noiseValue += simplex(dx, dy, dz) * amplitude;
+        maxValue += amplitude;
+
+        amplitude *= persistence;
+        frequency *= lacunarity;
+    }
+    return (noiseValue / maxValue) * 0.5f + 0.5f;
+}
+
+uint3 GetPoint(uint3 id)
+{
+    int x = chunkPosition.x * (width - 1) + id.x;
+    int y = chunkPosition.y * (height - 1) + id.y;
+    int z = chunkPosition.z * (depth - 1) + id.z;
+    return uint3(abs(x), abs(y), abs(z));
+}
+
+[numthreads(8, 8, 8)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= width || id.y >= height || id.z >= depth)
+        return;
+	
+    uint3 p = GetPoint(id);
+    noiseBuffer[id.x + width * (id.y + height * id.z)] = noise(p.x, p.y, p.z); //noise(id.x, id.y, id.z);
+
+}

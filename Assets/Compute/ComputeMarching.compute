@@ -1,0 +1,112 @@
+#pragma kernel MarchingCubes
+
+#include "LookupTables.hlsl"
+
+struct Triangle
+{
+    float3 a, b, c;
+};
+
+uint size;
+float isolevel;
+RWStructuredBuffer<float> weightBuffer;
+
+AppendStructuredBuffer<Triangle> triangleBuffer;
+
+int GetCubeIndex(float weights[8])
+{
+    int index = 0;
+    //for (int i = 0; i < 8; i++)
+    if (weights[0] < isolevel)
+        index |= 1 << 0;
+    if (weights[1] < isolevel)
+        index |= 1 << 1;
+    if (weights[2] < isolevel)
+        index |= 1 << 2;
+    if (weights[3] < isolevel)
+        index |= 1 << 3;
+    if (weights[4] < isolevel)
+        index |= 1 << 4;
+    if (weights[5] < isolevel)
+        index |= 1 << 5;
+    if (weights[6] < isolevel)
+        index |= 1 << 6;
+    if (weights[7] < isolevel)
+        index |= 1 << 7;
+    return index;
+}
+
+uint IndexFromID(uint3 id)
+{
+    return id.x + size * (id.y + size * id.z);
+}
+
+float3 Interpolate(float3 a, float3 b, int a_weight, int b_weight)
+{
+    return a + (isolevel - a_weight) * (b - a) / (b_weight - a_weight + 0.0001f);
+}
+
+void March(uint3 id)
+{
+    float weights[8];
+    //for (int i = 0; i < 8; i++)
+    weights[0] = weightBuffer[IndexFromID(id + offset[0])];
+    weights[1] = weightBuffer[IndexFromID(id + offset[1])];
+    weights[2] = weightBuffer[IndexFromID(id + offset[2])];
+    weights[3] = weightBuffer[IndexFromID(id + offset[3])];
+    weights[4] = weightBuffer[IndexFromID(id + offset[4])];
+    weights[5] = weightBuffer[IndexFromID(id + offset[5])];
+    weights[6] = weightBuffer[IndexFromID(id + offset[6])];
+    weights[7] = weightBuffer[IndexFromID(id + offset[7])];
+
+    int cubeIndex = GetCubeIndex(weights);
+    int tri[16] = triangulation[cubeIndex];
+    Triangle _triangle;
+    
+    for (int j = 0; tri[j] != -1; j += 3)
+    {
+        float3 a = offset[edges[tri[j]][0]];
+        float3 b = offset[edges[tri[j]][1]];
+        float3 vtx01 = Interpolate(
+            a,
+            b,
+            weights[edges[tri[j]][0]],
+            weights[edges[tri[j]][1]]
+        );
+           
+        float3 c = offset[edges[tri[j + 1]][0]];
+        float3 d = offset[edges[tri[j + 1]][1]];
+        float3 vtx02 = Interpolate(
+            c,
+            d,
+            weights[edges[tri[j + 1]][0]],
+            weights[edges[tri[j + 1]][1]]
+        );
+        
+        float3 e = offset[edges[tri[j + 2]][0]];
+        float3 f = offset[edges[tri[j + 2]][1]];
+        float3 vtx03 = Interpolate(
+            e,
+            f,
+            weights[edges[tri[j + 2]][0]],
+            weights[edges[tri[j + 2]][1]]
+        );
+        
+       
+        _triangle.a = vtx01;
+        _triangle.b = vtx02;
+        _triangle.c = vtx03;
+        triangleBuffer.Append(_triangle);
+    }
+}
+
+[numthreads(8,8,8)]
+void MarchingCubes (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= size - 1 || id.y >= size - 1 || id.z >= size - 1)
+        return;
+        
+    March(id);
+    // get cube weights:: for i < 8: weightBuffer[(x, y, z) + offset[i]] = weights[i]
+    // get cube vertices:: for i < 8: (x, y, z) + offset[i] = vertices[i]
+}
