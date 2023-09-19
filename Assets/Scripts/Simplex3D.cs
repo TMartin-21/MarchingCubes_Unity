@@ -16,6 +16,10 @@ public class Simplex3D : MonoBehaviour
     public float lacunarity = 2f;
     public int seed = 0;
 
+    [Header("Remapping noise value")]
+    public float toA = -8;
+    public float toB = 4;
+
     public float[] Noise
     {
         private set;
@@ -33,11 +37,6 @@ public class Simplex3D : MonoBehaviour
     private void OnDestroy()
     {
         noiseBuffer.Release();
-    }
-
-    private void Update()
-    {
-        NoiseShader();
     }
 
     public void NoiseShader(Vector3? chunkPosition = null)
@@ -64,14 +63,14 @@ public class Simplex3D : MonoBehaviour
         shader.Dispatch(kernel, workgroupX, workgroupY, workgroupZ);
 
         noiseBuffer.GetData(Noise);
-        //ReMapWeights();
+        ReMapWeights();
     }
 
     private void ReMapWeights()
     {
         for (int i = 0; i < Noise.Length; i++)
         {
-            Noise[i] = map(Noise[i], -1, 1, -8, 4);
+            Noise[i] = map(Noise[i], -1, 1, toA, toB);
         }
     }
 
