@@ -20,8 +20,8 @@ namespace MarchingCubesGeneric
 
     public static class Consts
     {
-        public static readonly int pointsPerAxis = 51;
-        public static readonly int cubesPerAxis = 50;
+        public static readonly int pointsPerAxis = 101;
+        public static readonly int cubesPerAxis = 100;
         public static readonly int chunkCount = 9;
 
         public static int pointSize => pointsPerAxis * pointsPerAxis * pointsPerAxis;

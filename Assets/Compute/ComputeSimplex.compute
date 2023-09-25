@@ -143,12 +143,12 @@ float noise(float x, float y, float z)
     return (noiseValue / maxValue) * 0.5f + 0.5f;
 }
 
-uint3 GetPoint(uint3 id)
+float3 GetPoint(uint3 id)
 {
-    int x = chunkPosition.x * (width - 1) + id.x;
-    int y = chunkPosition.y * (height - 1) + id.y;
-    int z = chunkPosition.z * (depth - 1) + id.z;
-    return uint3(abs(x), abs(y), abs(z));
+    float x = ((float)chunkPosition.x * ((float)width - 1) + (float)id.x);  /* * 0.25f;*/
+    float y = ((float)chunkPosition.y * ((float)height - 1) + (float)id.y); /* * 0.25f;*/
+    float z = ((float)chunkPosition.z * ((float)depth - 1) + (float)id.z);  /* * 0.25f;*/
+    return float3(abs(x), abs(y), abs(z));
 }
 
 [numthreads(8, 8, 8)]
@@ -157,7 +157,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     if (id.x >= width || id.y >= height || id.z >= depth)
         return;
 	
-    uint3 p = GetPoint(id);
+    float3 p = GetPoint(id);
     noiseBuffer[id.x + width * (id.y + height * id.z)] = noise(p.x, p.y, p.z); //noise(id.x, id.y, id.z);
 
 }

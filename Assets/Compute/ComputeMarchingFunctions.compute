@@ -1,0 +1,32 @@
+uint IndexFromID(uint3 id)
+{
+    return id.x + 101 * (id.y + 101 * id.z);
+}
+
+float3 Interpolate(float3 a, float3 b, int a_weight, int b_weight, float isolevel)
+{
+    return a + (isolevel - a_weight) * (b - a) / (b_weight - a_weight + 0.0001f);
+}
+
+int GetCubeIndex(float weights[8], float isolevel)
+{
+    int index = 0;
+    //for (int i = 0; i < 8; i++)
+    if (weights[0] < isolevel)
+        index |= 1 << 0;
+    if (weights[1] < isolevel)
+        index |= 1 << 1;
+    if (weights[2] < isolevel)
+        index |= 1 << 2;
+    if (weights[3] < isolevel)
+        index |= 1 << 3;
+    if (weights[4] < isolevel)
+        index |= 1 << 4;
+    if (weights[5] < isolevel)
+        index |= 1 << 5;
+    if (weights[6] < isolevel)
+        index |= 1 << 6;
+    if (weights[7] < isolevel)
+        index |= 1 << 7;
+    return index;
+}

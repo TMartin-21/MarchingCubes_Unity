@@ -210,7 +210,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 10, z: -10}
+  m_LocalPosition: {x: 150, y: 10, z: 150}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -475,8 +475,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e00ee03fd854e468825564a0c60885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 2
-  terraceHeight: 2
+  terrainType: 1
+  terraceHeight: 4.4
 --- !u!114 &864641148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,7 +490,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 50712ab7e4e8fee4d994964d8f9b92f6, type: 3}
-  isolevel: -5.5
+  isolevel: -5.19
+  blendedMesh: 0
 --- !u!114 &864641149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,12 +505,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: b76c7003cc630204da99cbb0959445d6, type: 3}
-  octave: 3
-  peristence: 0.54
-  lacunarity: 2.23
+  octave: 7
+  peristence: 0.47
+  lacunarity: 2.12
   seed: 0
-  toA: -8
-  toB: 25
+  toA: -64
+  toB: 32
 --- !u!23 &864641150
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -608,8 +609,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e00ee03fd854e468825564a0c60885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 2
-  terraceHeight: 2
+  terrainType: 1
+  terraceHeight: 4.4
 --- !u!114 &869333045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,7 +624,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 50712ab7e4e8fee4d994964d8f9b92f6, type: 3}
-  isolevel: -5.5
+  isolevel: -5.19
+  blendedMesh: 0
 --- !u!114 &869333046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -637,12 +639,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: b76c7003cc630204da99cbb0959445d6, type: 3}
-  octave: 3
-  peristence: 0.54
-  lacunarity: 2.23
+  octave: 7
+  peristence: 0.47
+  lacunarity: 2.12
   seed: 0
-  toA: -8
-  toB: 25
+  toA: -64
+  toB: 32
 --- !u!23 &869333047
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -726,8 +728,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e00ee03fd854e468825564a0c60885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 2
-  terraceHeight: 2
+  terrainType: 1
+  terraceHeight: 4.4
 --- !u!114 &980691356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -741,7 +743,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 50712ab7e4e8fee4d994964d8f9b92f6, type: 3}
-  isolevel: -5.5
+  isolevel: -5.19
+  blendedMesh: 0
 --- !u!114 &980691357
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,12 +758,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: b76c7003cc630204da99cbb0959445d6, type: 3}
-  octave: 3
-  peristence: 0.54
-  lacunarity: 2.23
+  octave: 7
+  peristence: 0.47
+  lacunarity: 2.12
   seed: 0
-  toA: -8
-  toB: 25
+  toA: -64
+  toB: 32
 --- !u!23 &980691358
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -874,8 +877,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e00ee03fd854e468825564a0c60885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 2
-  terraceHeight: 2
+  terrainType: 1
+  terraceHeight: 4.4
 --- !u!114 &1130226407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -889,7 +892,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 50712ab7e4e8fee4d994964d8f9b92f6, type: 3}
-  isolevel: -5.5
+  isolevel: -5.19
+  blendedMesh: 0
 --- !u!114 &1130226408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -903,12 +907,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: b76c7003cc630204da99cbb0959445d6, type: 3}
-  octave: 3
-  peristence: 0.54
-  lacunarity: 2.23
+  octave: 7
+  peristence: 0.47
+  lacunarity: 2.12
   seed: 0
-  toA: -8
-  toB: 25
+  toA: -64
+  toB: 32
 --- !u!23 &1130226409
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1072,6 +1076,111 @@ Transform:
   - {fileID: 1835035753}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1235012034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1235012038}
+  - component: {fileID: 1235012037}
+  - component: {fileID: 1235012036}
+  - component: {fileID: 1235012035}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!135 &1235012035
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235012034}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1235012036
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235012034}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: dce116ce72ad47a48bb57100bfeec6b5, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1235012037
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235012034}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1235012038
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1235012034}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1290763762
 GameObject:
   m_ObjectHideFlags: 0
@@ -1120,8 +1229,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e00ee03fd854e468825564a0c60885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 2
-  terraceHeight: 2
+  terrainType: 1
+  terraceHeight: 4.4
 --- !u!114 &1290763765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1135,7 +1244,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 50712ab7e4e8fee4d994964d8f9b92f6, type: 3}
-  isolevel: -5.5
+  isolevel: -5.19
+  blendedMesh: 0
 --- !u!114 &1290763766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1149,12 +1259,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: b76c7003cc630204da99cbb0959445d6, type: 3}
-  octave: 3
-  peristence: 0.54
-  lacunarity: 2.23
+  octave: 7
+  peristence: 0.47
+  lacunarity: 2.12
   seed: 0
-  toA: -8
-  toB: 25
+  toA: -64
+  toB: 32
 --- !u!23 &1290763767
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1253,8 +1363,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e00ee03fd854e468825564a0c60885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 2
-  terraceHeight: 2
+  terrainType: 1
+  terraceHeight: 4.4
 --- !u!114 &1566852244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1268,7 +1378,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 50712ab7e4e8fee4d994964d8f9b92f6, type: 3}
-  isolevel: -5.5
+  isolevel: -5.19
+  blendedMesh: 0
 --- !u!114 &1566852245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1282,12 +1393,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: b76c7003cc630204da99cbb0959445d6, type: 3}
-  octave: 3
-  peristence: 0.54
-  lacunarity: 2.23
+  octave: 7
+  peristence: 0.47
+  lacunarity: 2.12
   seed: 0
-  toA: -8
-  toB: 25
+  toA: -64
+  toB: 32
 --- !u!23 &1566852246
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1386,8 +1497,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e00ee03fd854e468825564a0c60885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 2
-  terraceHeight: 2
+  terrainType: 1
+  terraceHeight: 4.4
 --- !u!114 &1611262424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1401,7 +1512,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 50712ab7e4e8fee4d994964d8f9b92f6, type: 3}
-  isolevel: -5.5
+  isolevel: -5.19
+  blendedMesh: 0
 --- !u!114 &1611262425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1415,12 +1527,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: b76c7003cc630204da99cbb0959445d6, type: 3}
-  octave: 3
-  peristence: 0.54
-  lacunarity: 2.23
+  octave: 7
+  peristence: 0.47
+  lacunarity: 2.12
   seed: 0
-  toA: -8
-  toB: 25
+  toA: -64
+  toB: 32
 --- !u!23 &1611262426
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1519,8 +1631,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e00ee03fd854e468825564a0c60885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 2
-  terraceHeight: 2
+  terrainType: 1
+  terraceHeight: 4.4
 --- !u!114 &1835035755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1534,7 +1646,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 50712ab7e4e8fee4d994964d8f9b92f6, type: 3}
-  isolevel: -5.5
+  isolevel: -5.19
+  blendedMesh: 0
 --- !u!114 &1835035756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1548,12 +1661,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: b76c7003cc630204da99cbb0959445d6, type: 3}
-  octave: 3
-  peristence: 0.54
-  lacunarity: 2.23
+  octave: 7
+  peristence: 0.47
+  lacunarity: 2.12
   seed: 0
-  toA: -8
-  toB: 25
+  toA: -64
+  toB: 32
 --- !u!23 &1835035757
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1652,8 +1765,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e00ee03fd854e468825564a0c60885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainType: 2
-  terraceHeight: 2
+  terrainType: 1
+  terraceHeight: 4.4
 --- !u!114 &1844954260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1667,7 +1780,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 50712ab7e4e8fee4d994964d8f9b92f6, type: 3}
-  isolevel: -5.5
+  isolevel: -5.19
+  blendedMesh: 0
 --- !u!114 &1844954261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1681,12 +1795,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: b76c7003cc630204da99cbb0959445d6, type: 3}
-  octave: 3
-  peristence: 0.54
-  lacunarity: 2.23
+  octave: 7
+  peristence: 0.47
+  lacunarity: 2.12
   seed: 0
-  toA: -8
-  toB: 25
+  toA: -64
+  toB: 32
 --- !u!23 &1844954262
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1745,3 +1859,4 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 1202401691}
+  - {fileID: 1235012038}
