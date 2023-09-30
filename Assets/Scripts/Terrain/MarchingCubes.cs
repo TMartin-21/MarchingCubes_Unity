@@ -10,18 +10,14 @@ public class MarchingCubes : MonoBehaviour
     [Header("Marching cubes comupte shader")]
     public ComputeShader shader;
 
-    [Header("Threshold")]
+    [Header("Mesh Surface")]
     public float isolevel = 0f;
-
     public bool blendedMesh = false;
 
     private ComputeBuffer triangleBuffer;
     private Triangle[] _triangles;
-    
     private ComputeBuffer countBuffer;
-
     private ComputeBuffer weightBuffer;
-
     private List<Vector3> vertices;
     private List<int> triangulation;
 
@@ -31,11 +27,7 @@ public class MarchingCubes : MonoBehaviour
         get;
     }
 
-    // For BlendedMesh
-    int idx = 0;
-    //Dictionary<int, int> vertexHash;
-    Dictionary<Vector3, int> vertexHash;
-    Dictionary<int, Vector3> vertexTriangulation;
+    private Dictionary<int, Vector3> vertexTriangulation;
 
     private void Awake()
     {
@@ -46,10 +38,7 @@ public class MarchingCubes : MonoBehaviour
 
         vertices = new List<Vector3>();
         triangulation = new List<int>();
-
-        vertexHash = new Dictionary<Vector3, int>();
         vertexTriangulation = new Dictionary<int, Vector3>();
-        idx = 0;
     }
 
     private void OnDestroy()
@@ -93,9 +82,7 @@ public class MarchingCubes : MonoBehaviour
     {
         vertices.Clear();
         triangulation.Clear();
-        vertexHash.Clear();
         vertexTriangulation.Clear();
-        idx = 0;
 
         for (int x = 0; x < Consts.cubesPerAxis; x++)
             for (int y = 0; y < Consts.cubesPerAxis; y++)
@@ -172,7 +159,7 @@ public class MarchingCubes : MonoBehaviour
         Mesh.RecalculateNormals();
     }
 
-    // Todo befejezni
+    
     public void MarchingShader(float[] weights)
     {
         vertices.Clear();

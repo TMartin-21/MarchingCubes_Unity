@@ -13,10 +13,9 @@ int3 chunkPosition;
 
 float3 rotate(float3 g, int hash)
 {
-	// Todo: different angles to the 3 axis
-    float a = 5.0f; // 72 * 5  = 360
-    float b = 10.0f; // 36 * 10 = 360
-    float ga = 20.0f; // 18 * 20 = 360
+    float a = 5.0f;
+    float b = 10.0f;
+    float ga = 20.0f;
     int hashA = hash & 72;
     int hashB = hash & 72;
     int hashG = hash & 72;
@@ -130,9 +129,9 @@ float noise(float x, float y, float z)
     float frequency = 1.0f;
     for (int i = 0; i < octave; i++)
     {
-        float dx = x / width * frequency; // + sampleBuffer[i * 3];
-        float dy = (y + 0.001f) / width * frequency; // + sampleBuffer[i * 3 + 1];
-        float dz = (z + 0.0001f) / width * frequency; // + sampleBuffer[i * 3 + 2];
+        float dx = x / width * frequency;    
+        float dy = (y + 0.001f) / width * frequency;
+        float dz = (z + 0.0001f) / width * frequency;
 
         noiseValue += simplex(dx, dy, dz) * amplitude;
         maxValue += amplitude;
@@ -145,9 +144,9 @@ float noise(float x, float y, float z)
 
 float3 GetPoint(uint3 id)
 {
-    float x = ((float)chunkPosition.x * ((float)width - 1) + (float)id.x);  /* * 0.25f;*/
-    float y = ((float)chunkPosition.y * ((float)height - 1) + (float)id.y); /* * 0.25f;*/
-    float z = ((float)chunkPosition.z * ((float)depth - 1) + (float)id.z);  /* * 0.25f;*/
+    float x = ((float)chunkPosition.x * ((float)width - 1) + (float)id.x);
+    float y = ((float)chunkPosition.y * ((float)height - 1) + (float)id.y);
+    float z = ((float)chunkPosition.z * ((float)depth - 1) + (float)id.z);
     return float3(abs(x), abs(y), abs(z));
 }
 
@@ -158,6 +157,6 @@ void CSMain(uint3 id : SV_DispatchThreadID)
         return;
 	
     float3 p = GetPoint(id);
-    noiseBuffer[id.x + width * (id.y + height * id.z)] = noise(p.x, p.y, p.z); //noise(id.x, id.y, id.z);
+    noiseBuffer[id.x + width * (id.y + height * id.z)] = noise(p.x, p.y, p.z);
 
 }

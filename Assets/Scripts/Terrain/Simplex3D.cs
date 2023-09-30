@@ -53,8 +53,6 @@ public class Simplex3D : MonoBehaviour
         shader.SetInt("octave", octave);
         shader.SetFloat("persistence", peristence);
         shader.SetFloat("lacunarity", lacunarity);
-
-        // Noise need to be calculated based on the chunk position
         shader.SetInts("chunkPosition", (int)chunkPosition?.x, (int)chunkPosition?.y, (int)chunkPosition?.z);
 
         int workgroupX = Mathf.CeilToInt(Consts.pointsPerAxis / 8f);

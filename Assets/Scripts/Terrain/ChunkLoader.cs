@@ -7,73 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer))]
 public class ChunkLoader : MonoBehaviour
 {
-    /* public Transform player;
-
-     struct PlayerPos
-     {
-         public Vector3 last;
-         public Vector3 current;
-     }
-
-     private PlayerPos playerPos;
-     private int chunkCount = 0;
-     private Chunk[] chunks;
-
-     private int pointsPerChunk;
-
-     private void Awake()
-     {
-         chunks = GetComponentsInChildren<Chunk>();
-         chunkCount = chunks.Length;
-         playerPos.last = player.position;
-         playerPos.current = player.position;
-     }
-
-     private void LoadChunk(int id, Vector3 chunkPosition)
-     {
-         for (int i = 0; i < chunkCount; i++)
-         {
-             if (chunks[i].ID == id)
-             {
-                 chunks[i].LoadMesh(chunkPosition);
-             }
-         }
-     }
-
-     private void UpdatePlayerPosition()
-     {
-         playerPos.last = playerPos.current;
-         playerPos.current = new Vector3(
-                                 Mathf.Floor(player.position.x / pointsPerChunk),
-                                 Mathf.Floor(player.position.y / pointsPerChunk),
-                                 Mathf.Floor(player.position.z / pointsPerChunk)
-                             );
-     }
-
-     private void GetChunkPositions()
-     {
-         List<Vector3> circle = new List<Vector3>();
-         float n = 200;
-         for (int i = 0; i < n; i++)
-         {
-             float fi = i * Mathf.PI / n;
-             Vector3 pos = new Vector3(Mathf.Cos(fi), 0, Mathf.Sin(fi));
-             circle.Add(pos);
-         }
-     }
-
-     private void GetGrid()
-     {
-         for (int i = 0; i < 360; i++)
-         {
-
-         }
-     }*/
-
-
-    //??
-    //public event Action rebuildMesh;
-
     public event Action<int> rebuildMesh;
 
     public GameObject player;
@@ -135,14 +68,6 @@ public class ChunkLoader : MonoBehaviour
         }
 
         CombineMeshes();
-    }
-
-    private void Update()
-    {
-        //LastAndCurrentPlayerPos();
-        //LastAndCurrentChunkPositions();
-        //LoadChunks();
-        //CombineMeshes();
     }
 
     private void CombineMeshes()
@@ -243,21 +168,6 @@ public class ChunkLoader : MonoBehaviour
         return pos;
     }
 
-    private void DiscardChunks()
-    {
-        // Clear invalid meshes
-
-
-    }
-
-    //private void BuildMesh()
-    //{
-    //    Mesh mesh = new Mesh();
-    //    mesh.CombineMeshes(combine);
-    //    transform.GetComponent<MeshFilter>().sharedMesh = mesh;
-    //    transform.gameObject.SetActive(true);
-    //}
-
     static Vector3[] offset = new Vector3[] {  
       //new Vector3( 0,  0,  0),
       //new Vector3( 0,  0,  1),
@@ -282,14 +192,6 @@ public class ChunkLoader : MonoBehaviour
 
     private Vector3[] GetCurrentChunkPosition()
     {
-        // Check the radial distance horizontally from the player
-        // Determine wich unit chunk the player are
-        // Calculate all the sourrunding chunks position (counteed from the origo)
-        // Caluclate the noise and build mesh based on the chunk position (only once)
-        // Load the chunks (only the meshes from the chunk, the chunk count will be fix,
-        // only the chunk position will change, based on the player position)
-
-        //List<Vector3> chunkPositions = new List<Vector3>(8);
         Vector3[] chunkPositions = new Vector3[chunkCount];
         Vector3 playerPosition = player.transform.position;
         chunkPositions[0] = new Vector3(Mathf.Floor(playerPosition.x / Consts.pointsPerAxis),

@@ -45,7 +45,6 @@ public class Chunk : MonoBehaviour
         SetCubeVertices(chunkPosition);
         SetCubeValues();
         marchingCubes.MarchingcubesCPU(cubes);
-        //marchingCubes.MarchingShader(simplexNoise.Noise);
         GetComponent<MeshFilter>().sharedMesh = marchingCubes.Mesh;
     }
 
@@ -78,11 +77,11 @@ public class Chunk : MonoBehaviour
                 for (int z = 0; z < Consts.cubesPerAxis; z++)
                 {
                     int cubeIndex = x + Consts.cubesPerAxis * (y + Consts.cubesPerAxis * z);
-                    float _x = ((float)chunkPosition?.x * Consts.cubesPerAxis + x);/* * 0.25f;*/
-                    float _y = ((float)chunkPosition?.y * Consts.cubesPerAxis + y);/* * 0.25f;*/
-                    float _z = ((float)chunkPosition?.z * Consts.cubesPerAxis + z);/* * 0.25f;*/
+                    float _x = ((float)chunkPosition?.x * Consts.cubesPerAxis + x);
+                    float _y = ((float)chunkPosition?.y * Consts.cubesPerAxis + y);
+                    float _z = ((float)chunkPosition?.z * Consts.cubesPerAxis + z);
                     for (int i = 0; i < 8; i++)
-                        cubes[cubeIndex].vertices[i] = new Vector3(_x, _y, _z) + LookupTables.vertices[i];/* * 0.25f;*/
+                        cubes[cubeIndex].vertices[i] = new Vector3(_x, _y, _z) + LookupTables.vertices[i];
                 }
     }
 
