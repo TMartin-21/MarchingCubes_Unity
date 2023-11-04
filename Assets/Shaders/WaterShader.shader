@@ -4,14 +4,28 @@ Shader "Lit/WaterShader"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        _WaterColor("WaterColor", COLOR) = (1, 1, 1, 1)
         _Amplitude("Amplitude", Float) = 1
         _Wavelength("Wavelength", Float) = 1
         _Speed("Speed", Float) = 1
+        _WaveCount("WaveCount", Int) = 0
+
+        _HurstExponent("HurstExponent", Float) = 0
+        _FrequencyMultiplier("FrequencyMultiplier", Float) = 0
+        _PhaseMultiplier("PhaseMultiplier", Float) = 0
+        
+        _Specular("Specular", Range(0.0, 1.0)) = 1
+        _Smoothness("Smoothness", Range(0.0, 1.0)) = 1
+        _Cube("Cubemap", CUBE)=""{}
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags 
+        { 
+            "LightMode"="UniversalForward"
+            "RenderType"="Opaque" 
+        }
+        
         LOD 100
 
         Pass
@@ -19,78 +33,129 @@ Shader "Lit/WaterShader"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-
+            #pragma multi_compile_instancing
+            
             #include "UnityCG.cginc"
-
-            struct appdata
-            {
-                float4 pos : POSITION;
-                fixed4 normal : NORMAL;
-            };
+            #include "UnityLightingCommon.cginc"
 
             struct v2f
             {
-                half3 objNormal : NORMAL;
                 float4 pos : SV_POSITION;
+                float3 worldPos : TEXCOORD1;
+                fixed3 normal : TEXCOORD2;
             };
-
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
 
             float _Amplitude;
             float _Wavelength;
             float _Speed;
+            int _WaveCount;
+            int _NumberOfWaves;
+            float _HurstExponent;
+            float _FrequencyMultiplier;
+            float _PhaseMultiplier;
+            
+            static float PI = 3.14159265359;
 
-            v2f vert (appdata v)
+            float3 getWave(float2 pos, float2 dir, float freq, float amp, float time)
+            {
+                float x = freq * dot(pos, dir) + time;
+                float H = exp(sin(x) - 1.0);
+                float dx = H * cos(x) * amp * dir.x * freq;
+                float dz = H * cos(x) * amp * dir.y * freq;
+                return float3(dx, H, dz);
+            }
+
+            float3 fbm(float3 pos)
+            {
+                float height = 0;
+                float amplitude = _Amplitude;
+                float frequency = 2.0 / _Wavelength;
+                float phase = _Speed * frequency;
+                float dx = 0;
+                float dz = 0;
+                float gain = exp2(-_HurstExponent);
+                float maxValue = 0;
+                float theta = 0;
+
+                for (int i = 0; i < _WaveCount; i++)
+                {
+                    float2 dir = normalize(float2(cos(theta), sin(theta)));
+                    float3 wave = getWave(pos.xz, dir, frequency, amplitude, _Time * phase);
+                    
+                    height += wave.y * amplitude;
+                    dx += wave.x;
+                    dz += wave.z;
+                    maxValue += amplitude;
+                    
+                    frequency *= _FrequencyMultiplier;
+                    amplitude *= gain;
+                    phase *= _PhaseMultiplier;
+
+                    theta += 360 / 45.0;
+                }
+
+                height = height / maxValue;
+
+                return float3(dx, height, dz);
+            }
+
+            v2f vert (appdata_base v)
             {
                 v2f o;
 
-                float w = 2.0f / _Wavelength;
-                float f = _Speed * w;
-                
-                fixed3 dir = fixed3(-1.2, 0, -8.23);
-                v.pos.y = _Amplitude * sin((v.pos.x * dir.x + v.pos.z * dir.z) * w + _Time * f);
-                
-                float dx = _Amplitude * w * dir.x * cos((v.pos.x * dir.x + v.pos.z * dir.z) * w + _Time * f);
-                float dy = _Amplitude * w * dir.z * cos((v.pos.x * dir.x + v.pos.z * dir.z) * w + _Time * f);
+                float3 wave = fbm(v.vertex.xyz);
+                float dx = wave.x;
+                float dz = wave.z;
+                v.vertex.y += wave.y;
 
                 fixed3 binormal = fixed3(1, dx, 0);
-                fixed3 tangent = fixed3(0, dy, 1);
+                fixed3 tangent = fixed3(0, dz, 1);
+                fixed3 normal = cross(tangent, binormal);
+                o.normal = normal;
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
 
-                fixed3 normal = normalize(cross(binormal, tangent));
-
-                o.objNormal = normal;
-                o.pos = UnityObjectToClipPos(v.pos);
                 return o;
             }
 
-            CBUFFER_START(_CustomLight)
-                float3 _DirectionalLightColor;
-                float3 _DirectionalLightDirection;
-            CBUFFER_END
-
-            float3 shade(
-                half3 normal, 
-                half3 lightDir, 
-                half3 viewDir,
-                fixed3 powerDensity,
-                fixed3 materialColor,
-                fixed3 specularColor,
-                float shininess)
+            fixed4 _WaterColor;
+            float _Specular;
+            float _Smoothness;
+            samplerCUBE _Cube;
+       
+            fixed4 diffuseAmbient(fixed3 worldNormal)
             {
-                
-                
-
-                return float3(0.0f, 0.0f, 0.0f);
+                //fixed4 _Color = fixed4(0.033529411764705882, 0.25882352941176473, 0.58098039215686275, 0);
+                half costheta = max(0.0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
+                half3 ambient = ShadeSH9(half4(worldNormal, 1));
+                fixed4 diffuse = costheta * _LightColor0;
+                diffuse.rgb += ambient;
+                diffuse.rgb *= _WaterColor.rgb;
+                return diffuse;
             }
 
+            fixed4 specular(fixed3 worldNormal, float3 worldPos)
+            {
+                fixed3 viewDir = normalize(_WorldSpaceCameraPos - worldPos);
+                fixed3 halfway = normalize(viewDir + _WorldSpaceLightPos0.xyz);
+                float cosdelta = max(0.0, dot(halfway, worldNormal));
+                fixed4 spec = _LightColor0 * pow(cosdelta, _Specular * 128.0) * _Smoothness * fixed4(.7, .7, .7, 0);
+                return spec;
+            }
+            
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 base;
-                base.rgb = i.objNormal;
-                return fixed4(0, 0.5, 0.5, 0);
+                
+                fixed4 col = fixed4(1, 1, 1, 0);
+                fixed3 worldNormal = UnityObjectToWorldNormal(i.normal);
+                fixed4 diff = diffuseAmbient(worldNormal);
+                fixed4 spec = specular(worldNormal, i.worldPos);
+                col *= diff + spec;
+                return col;
             }
             ENDCG
         }
+
+        UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
     }
 }
