@@ -7,7 +7,7 @@ A projekt a szakdolgozatomban kitűzött feladat megvalósítása:
 - Felület generálása marching cubes algoritmussal, chunkokra bontva. A felület egy terephez hasonló zöld-barna színátmenetet kapott egy egyszerű shader segítségével. A projektbe bekerült egy egyszerű sűrűségfüggvény is, mely a legenerált felület formáját határozza meg:
 
 <p align="center">
-    <img src="/Screenshot 2023-09-26 001928.png" width="400">
+    <img src="/Screenshot 2023-11-29 191657-1.png" width="400">
 </p>
 
 <p align="center">
