@@ -4,6 +4,9 @@ Shader "Lit/WaterShader"
 {
     Properties
     {
+        _PositionY("PositionY", Float) = 0
+        _ScaleY("ScaleY", Float) = 1
+
         _WaterColor("WaterColor", COLOR) = (1, 1, 1, 1)
         _Amplitude("Amplitude", Float) = 1
         _Wavelength("Wavelength", Float) = 1
@@ -134,6 +137,11 @@ Shader "Lit/WaterShader"
                 return diffuse;
             }
 
+            float3 shlickFresnel(float3 R0, float cosfi)
+            {
+                return R0 + (1.0 - R0) * pow((1.0 - cosfi), 5.0);
+            }
+
             fixed4 specular(fixed3 worldNormal, float3 worldPos)
             {
                 fixed3 viewDir = normalize(_WorldSpaceCameraPos - worldPos);
@@ -142,15 +150,44 @@ Shader "Lit/WaterShader"
                 fixed4 spec = _LightColor0 * pow(cosdelta, _Specular * 128.0) * _Smoothness * fixed4(.7, .7, .7, 0);
                 return spec;
             }
-            
+ 
+            const float Air = 1.0;
+            const float AirToWater = 1.333;
+            const float Water = 1.51714;
+
+            float _PositionY;
+            float _ScaleY;
+
             fixed4 frag (v2f i) : SV_Target
             {
-                
                 fixed4 col = fixed4(1, 1, 1, 0);
                 fixed3 worldNormal = UnityObjectToWorldNormal(i.normal);
                 fixed4 diff = diffuseAmbient(worldNormal);
                 fixed4 spec = specular(worldNormal, i.worldPos);
-                col *= diff + spec;
+
+                // Reflection
+                //float3 refraction = refract(-viewDir, worldNormal, Air / Water);
+                //float R0 = ((Air - Air) * (Air - Air)) / ((Water + Water) * (Water + Water));
+                //float fresnel = R0 + (1.0 - R0) * pow((1.0 - dot(-viewDir, worldNormal)), 5.0);
+                //fixed4 r = lerp(diff, reflectColor, fresnel);
+
+                fixed3 viewDir = normalize(_WorldSpaceCameraPos - i.worldPos);
+                float cosfi = dot(viewDir, worldNormal);
+                float base = 1 - dot(-viewDir, worldNormal);
+                float exponential = pow(base, 5.0);
+                float R = exponential + (1 - exponential) * 0.7;
+                R *= 0.01;
+
+                float3 fresnel = R * float3(0.7, 0.7, 0.7); //shlickFresnel(viewDir, cosfi) * ;
+                
+
+                float3 reflection = reflect(-viewDir, worldNormal);
+                float4 reflectColor = texCUBE(_Cube, normalize(reflection));
+                fresnel = reflectColor.rgb * R;
+                
+                fixed4 crestColor = fixed4(1, 1, 1, 1) * pow(i.worldPos.y / _ScaleY - _PositionY, 4);
+                
+                col *= diff + spec + crestColor + reflectColor * 0.05;
                 return col;
             }
             ENDCG

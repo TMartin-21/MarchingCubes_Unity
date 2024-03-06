@@ -39,6 +39,8 @@ public class Water : MonoBehaviour
     {
         MaterialPropertyBlock props = new MaterialPropertyBlock();
         Light light = RenderSettings.sun;
+        props.SetFloat("_PositionY", transform.position.y);
+        props.SetFloat("_ScaleY", transform.localScale.y);
         props.SetFloat("_Amplitude", amplitude);
         props.SetFloat("_Wavelength", wavelength);
         props.SetFloat("_Speed", speed);

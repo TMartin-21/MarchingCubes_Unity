@@ -8,6 +8,7 @@ Shader "Unlit/CustomShader"
         _Color("Color", COLOR) = (0.5, 0.5, 0.5, 1)
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 1
         _Specular("Specular", Range(0.0, 1.0)) = 1
+        _Cubemap("Cubemap", CUBE)=""{}
     }
     SubShader
     {
@@ -49,6 +50,7 @@ Shader "Unlit/CustomShader"
             
             float _Smoothness;
             float _Specular;
+            samplerCUBE _Cubemap;
             
             fixed4 frag (v2f i) : SV_Target
             {
@@ -64,11 +66,12 @@ Shader "Unlit/CustomShader"
                 float3 viewDir = normalize(_WorldSpaceCameraPos - i.worldPos);
                 fixed3 halfway = normalize(viewDir + _WorldSpaceLightPos0.xyz);
                 float cosdelta = max(0.0, dot(halfway, worldNormal));
+                fixed4 spec = _LightColor0 * pow(cosdelta, _Specular * 128.0) * _Smoothness * fixed4(.7, .7, .7, 0);
 
-                fixed4 specular = _LightColor0 * pow(cosdelta, _Specular * 128.0) * _Smoothness;
-                fixed4 spc = fixed4(.7, .7, .7, 0);
-
-                col *= (diff * _Color + specular * spc);
+                //float3 reflection = reflect(-viewDir, worldNormal);
+                //fixed4 refl = texCUBE(_Cubemap, normalize(reflection));
+                
+                col *= diff * _Color + spec;
                 return col;
             }
             ENDCG

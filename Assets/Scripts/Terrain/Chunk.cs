@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MarchingCubesGeneric;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(Simplex3D))]
 [RequireComponent(typeof(MarchingCubes))]
@@ -13,19 +14,27 @@ public class Chunk : MonoBehaviour
     {
         NORMAL,
         FLAT,
-        TERRACED
+        TERRACED,
+        GAUSSIAN
     }
 
     [Header("Terrain attributes")]
     public Terrain terrainType = Terrain.NORMAL;
     public float terraceHeight = 2f;
+    public float gaussianAmplitude = 1;
+    public float xSpread = 1;
+    public float zSpread = 1;
 
     private Cube[] cubes;
     private Simplex3D simplexNoise;
     private MarchingCubes marchingCubes;
 
+    private Vector3 initialChunkPos;
+
     private void Awake()
     {
+        initialChunkPos = Vector3.up;
+
         cubes = new Cube[Consts.cubeSize];
         for (int x = 0; x < Consts.cubesPerAxis; x++)
             for (int y = 0; y < Consts.cubesPerAxis; y++)
@@ -41,6 +50,11 @@ public class Chunk : MonoBehaviour
 
     public void CreateMesh(Vector3 chunkPosition)
     {
+        if (initialChunkPos == Vector3.up)
+        {
+            initialChunkPos = chunkPosition;
+        }
+
         simplexNoise.NoiseShader(chunkPosition);
         SetCubeVertices(chunkPosition);
         SetCubeValues();
@@ -95,6 +109,10 @@ public class Chunk : MonoBehaviour
         {
             return Terracing(vertex.y, weightIndex);
         }
+        else if (terrainType == Terrain.GAUSSIAN)
+        {
+            return Gaussian(vertex, weightIndex);
+        }
         return simplexNoise.Noise[weightIndex];
     }
 
@@ -106,5 +124,15 @@ public class Chunk : MonoBehaviour
     private float Terracing(float height, int weightIndex)
     {
         return -height + simplexNoise.Noise[weightIndex] + height % terraceHeight;
+    }
+
+    private float Gaussian(Vector3 cubePos, int weightIndex)
+    {
+        //TODO
+        //Vector3 center = initialChunkPos + new Vector3(Consts.chunkCount / 2, 0, Consts.chunkCount / 2);
+        Vector3 pos = cubePos - new Vector3(150, 0, 250);
+        float value = - (pos.x * pos.x) / (2 * xSpread * xSpread) - (pos.z * pos.z) / (2 * zSpread * zSpread);
+        float gaussian = gaussianAmplitude * Mathf.Exp(value);
+        return -cubePos.y * 2f + gaussian + simplexNoise.Noise[weightIndex] - 110f;
     }
 }
